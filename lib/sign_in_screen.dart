@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'sign_up_screen.dart';
 import 'reset_password_screen.dart';
-class SignInScreen extends StatelessWidget {
-  TextEditingController nameController = TextEditingController();
+class SignInScreen extends StatefulWidget {
 
   SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  TextEditingController nameController = TextEditingController();
+
+  TextEditingController nameController1 = TextEditingController();
+
+  bool nameControllerEmpty = false;
+  bool nameController1Empty = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -17,60 +28,56 @@ class SignInScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(child: Image.network('https://i.guim.co.uk/img/media/327aa3f0c3b8e40ab03b4ae80319064e401c6fbc/377_133_3542_2834/master/3542.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=34d32522f47e4a67286f9894fc81c863', height: 100, )),
-              Center(child: Text("Sign In", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)),
-              SizedBox(height: 20),
-              const Text(
-                  'Email',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+              Center(child: Text("Sign In", 
+              style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 32),
+                    )
                   ),
+              SizedBox(height: 20),
+              Text(
+                'Email',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
                 ),
              TextField(
               controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
             ),
+            nameControllerEmpty ? Text("email field can not be empty", style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.red),) : Container(),
               SizedBox(height: 10),
-              const Text(
+             Text(
                   'Password',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
                 ),
               TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+              controller: nameController1,
+              obscureText: true,
             ),
+            nameController1Empty ? Text("password field can not be empty", style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.red),) : Container(),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  setState(() {
+                  });
+                  nameControllerEmpty = false;
+                  nameController1Empty = false;
+                  nameController.clear();
+                  nameController1.clear();
+                    
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SignUpScreen()),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+                style: ElevatedButton.styleFrom( 
                   backgroundColor: Colors.white,
                 ),
-                child: Text('Sign Up', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)
+                child: Text('Sign Up', style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.blue) ,)
               ),
             ),
             SizedBox(height: 10),
@@ -79,6 +86,22 @@ class SignInScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                    setState(() {
+                    });
+                    if (nameController.text.isEmpty || nameController1.text.isEmpty) {
+                      if (nameController.text.isEmpty && nameController1.text.isEmpty) {
+                        nameControllerEmpty = true;
+                        nameController1Empty = true;
+                      } else if (nameController.text.isEmpty) {
+                        nameControllerEmpty = true;
+                        nameController1Empty = false;
+                      } else if (nameController1.text.isEmpty) {
+                        nameController1Empty = true;
+                        nameControllerEmpty = false;
+                      }
+                       
+                      return;
+                    }
                       AlertDialog alert = AlertDialog(
                         title: Text("Login"),
                         content: Text("Login Successful"),
@@ -89,22 +112,17 @@ class SignInScreen extends StatelessWidget {
                           return alert;
                         },
                       );
+                      nameControllerEmpty = false;
+                      nameController1Empty = false;
+                      nameController.clear();
+                      nameController1.clear();
                     },
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50), // висота 50
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       backgroundColor: const Color.fromARGB(255, 42, 57, 145),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Roboto',
-                      ),
+                       style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
@@ -118,20 +136,11 @@ class SignInScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50), // така ж висота
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       backgroundColor: Colors.white,
                     ),
-                    child: const Text(
+                    child:  Text(
                       'Reset password',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Roboto',
-                      ),
+                      style: Theme.of( context).textTheme.labelMedium!.copyWith(color: Colors.blue)
                     ),
                   ),
                 ),

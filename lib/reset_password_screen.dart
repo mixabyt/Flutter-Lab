@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
 
-class ResetPasswordScreen extends StatelessWidget {
+class ResetPasswordScreen extends StatefulWidget {
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final nameController = TextEditingController();
+
+  bool show = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,29 +21,27 @@ class ResetPasswordScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Text("Reset password", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)),
+              Center(child: Text("Reset password", style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 32),)),
               SizedBox(height: 20),
-              const Text(
-                  'Name',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+               Text(
+                  'Email',
+                  style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
                 ),
              TextField(
               controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
             ),
+            show ? Text("email field can not be empty", style: TextStyle(color: Colors.red),) : Container(),
               SizedBox(height: 10),
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  setState(() {});
+                  if (nameController.text.isEmpty) {
+                    show = true; 
+                    return;
+                  }
                   AlertDialog alert = AlertDialog(
                     title: Text("Reset Password"),
                     content: Text("Password reset link sent to your email"),
@@ -46,15 +52,14 @@ class ResetPasswordScreen extends StatelessWidget {
                       return alert;
                     },
                   );
+                  show = false;
+                  nameController.clear();
+                  
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   backgroundColor: Colors.white,
                 ),
-                child: Text('Reset password', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)
+                child: Text('Reset password', style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.blue),)
               ),
             ),
             SizedBox(height: 10),
@@ -64,13 +69,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+                  
                   backgroundColor: Colors.white,
                 ),
-                child: Text('Back', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)
+                child: Text('Back', style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.blue),)
               ),
             ),
             SizedBox(height: 10),

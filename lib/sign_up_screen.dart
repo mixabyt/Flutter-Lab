@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
 
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final nameController = TextEditingController();
+
+  final nameController1 = TextEditingController();
+
+  final nameController2 = TextEditingController();
+
+  bool nameControllerEmpty = false;
+
+  bool nameController1Empty = false;
+
+  bool nameController2Empty = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,65 +29,75 @@ class SignUpScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Text("Sign Up", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)),
+              Center(child: Text("Sign Up", style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 32),
+                    )
+                  ),
               SizedBox(height: 20),
-              const Text(
+               Text(
                   'Name',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context)
+                    .textTheme
+                    .labelSmall 
                 ),
              TextField(
               controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
             ),
+            nameControllerEmpty ? Text('Name field cannot be empty', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.red)) : Container(),
+
               SizedBox(height: 10),
-              const Text(
+               Text(
                   'Email',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
                 ),
              TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+              controller: nameController1,
             ),
+            nameController1Empty ? Text('Email field cannot be empty', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.red)) : Container(),
               SizedBox(height: 10),
-              const Text(
+               Text(
                   'Password',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
                 ),
               TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 247, 247, 247),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+              controller: nameController2,
+              obscureText: true,
             ),
+            nameController2Empty ? Text('password cannot be empty', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.red)) : Container(),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                    setState(() {});
+                    print(nameControllerEmpty);
+                  if (nameController.text.isEmpty || nameController1.text.isEmpty || nameController2.text.isEmpty) {
+                    print(nameControllerEmpty);
+                    if (nameController.text.isEmpty) {
+                      nameControllerEmpty = true;
+                    } else {
+                      print("here");
+                      nameControllerEmpty = false;
+                    }
+                    if (nameController1.text.isEmpty) {
+                      nameController1Empty = true;
+                    } else {
+                      nameController1Empty = false;
+                    }
+                    if (nameController2.text.isEmpty) {
+                      nameController2Empty = true;
+                    } else {
+                      nameController2Empty = false;
+                    }
+                    
+                    return;
+                  }
+
                   AlertDialog alert = AlertDialog(
                     title: Text("Sign Up"),
                     content: Text("Sign Up Successful"),
@@ -82,15 +108,18 @@ class SignUpScreen extends StatelessWidget {
                       return alert;
                     },
                   );
+
+                  nameControllerEmpty = false;
+                  nameController1Empty = false;
+                  nameController2Empty = false;
+                  nameController.clear();
+                  nameController1.clear();
+                  nameController2.clear();
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   backgroundColor: Colors.white,
                 ),
-                child: Text('Sign Up', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)
+                child: Text('Sign Up', style: Theme.of( context).textTheme.labelMedium!.copyWith(color: Colors.blue),)
               ),
             ),
             SizedBox(height: 10),
@@ -100,13 +129,9 @@ class SignUpScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   backgroundColor: Colors.white,
                 ),
-                child: Text('Back', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),)
+                child: Text('Back', style: Theme.of( context).textTheme.labelMedium!.copyWith(color: Colors.blue),)
               ),
             ),
             SizedBox(height: 10),
