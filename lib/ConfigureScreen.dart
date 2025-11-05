@@ -29,7 +29,7 @@ class _ConfigurescreenState extends State<Configurescreen> {
 
     String message;
     if (result == 'ok') {
-      message = 'OK!';
+      message = 'Cool!';
     } else if (result == 'cancel') {
       message = "Let’s try something else.";
     } else {
