@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_lab_6/RemoteService.dart';
 import 'sign_up_screen.dart';
 import 'reset_password_screen.dart';
 
@@ -13,28 +15,37 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final nameController = TextEditingController();
-  final nameController1 = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
 
   @override
   void initState() {
-    nameController.clear();
-    nameController1.clear();  
+    emailController.clear();
+    passwordController.clear();  
     super.initState();
   }
 
 @override
   void dispose() {
-    nameController.dispose();
-    nameController1.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
   void _resetForm() {
     _formKey.currentState?.reset();
-    nameController.clear();
-    nameController1.clear();
+    emailController.clear();
+    passwordController.clear();
+  }
+
+  Future<Response<dynamic>> loginUser(String email, String password) async {
+    var dio = Dio();
+    final response = await dio.post(
+      RemoteService.loginUrl,
+      data: {'email': email, 'password': password},
+    );
+    return response;
   }
 
   @override
@@ -67,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(height: 20),
                 Text('Email', style: Theme.of(context).textTheme.labelSmall),
                 TextFormField(
-                  controller: nameController,
+                  controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Email field cannot be empty';
@@ -80,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(height: 10),
                 Text('Password', style: Theme.of(context).textTheme.labelSmall),
                 TextFormField(
-                  controller: nameController1,
+                  controller: passwordController,
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -118,21 +129,55 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            AlertDialog alert = AlertDialog(
-                              title: Text("Login"),
-                              content: Text("Login Successful"),
+                        onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          FocusScope.of(context).unfocus();
+
+                          try {
+                            final response = await loginUser(
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
                             );
+
+                            String message;
+                            if (response.statusCode == 200) {
+                              message = "Login Successful";
+                              _resetForm();
+                            } else {
+                              message = "Login Failed";
+                            }
+
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) {
-                                return alert;
-                              },
+                              builder: (_) => AlertDialog(
+                                title: const Text("Login"),
+                                content: Text(message),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(),
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              ),
                             );
-                            _resetForm();
+
+                          } catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text("Error"),
+                                content: Text("Something went wrong: $e"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(),
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
-                        },
+                        }
+                      },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 42, 57, 145),

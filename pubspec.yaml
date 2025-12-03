@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   email_validator: ^2.1.17
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:

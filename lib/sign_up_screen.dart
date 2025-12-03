@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_lab_6/RemoteService.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -32,6 +34,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _resetForm() {
     _formKey.currentState?.reset();
     nameController.clear();
+  }
+
+  Future<Response<dynamic>> signUpUser(String name, String email, String password) async {
+    var dio = Dio();
+    final response = await dio.post(
+      RemoteService.registerUrl,
+      data: {'name': name, 'email': email, 'password': password},
+    );
+    return response;
   }
 
   @override
@@ -96,11 +107,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async{
                       if (_formKey.currentState!.validate()) {
-                        AlertDialog alert = AlertDialog(
-                          title: Text("Sign Up"),
-                          content: Text("Sign Up Successful"),
+                        FocusScope.of(context).unfocus();
+                        try {
+                          final response = await signUpUser(
+                            nameController.text.trim(),
+                            nameController1.text.trim(),
+                            nameController2.text.trim(),
+                          );
+
+                          String message;
+                          if (response.statusCode == 200) {
+                            message = "Sign Up Successful";
+                          } else {
+                            message = "Sign Up Failed";
+                          }
+
+                          AlertDialog alert = AlertDialog(
+                          title: const Text("Sign Up"),
+                          content: Text(message),
                         );
                         showDialog(
                           context: context,
@@ -109,6 +135,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                         );
                         _resetForm();
+                          
+                        } catch (e) {
+                          AlertDialog alert = AlertDialog(
+                            title: const Text("Sign Up"),
+                            content: const Text(
+                                "Network error occurred"),
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert;
+                            },
+                          );
+                          return;
+                        }
+                        
                       }
                     },
                     style: ElevatedButton.styleFrom(
