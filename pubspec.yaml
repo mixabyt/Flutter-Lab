@@ -1,4 +1,4 @@
-name: flutter_lab_6
+name: lab10
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
