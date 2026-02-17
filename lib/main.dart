@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:lab10/ConfigureScreen.dart';
-
+import 'package:flutter_lab_11/providers/RgbModel.dart';
+import 'package:provider/provider.dart';
+import 'Sliders.dart';
+import 'RGBbox.dart';
 void main() {
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-   MainApp({super.key});
+  const MainApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      theme: ThemeData(
-         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: ChangeNotifierProvider(
+              create: (_) => RgbModel(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Rgbbox(),
+                  Sliders(),
+                ],
+              ),
             ),
           ),
         ),
       ),
-      home: Configurescreen(),
     );
   }
 }
