@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_lab_6/RemoteService.dart';
 class ResetPasswordScreen extends StatefulWidget {
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -13,6 +15,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   void dispose() {
     nameController.dispose();
     super.dispose();
+  }
+
+  Future<Response<dynamic>> resetPassword(String email) async {
+    var dio = Dio();
+    final response = await dio.post(
+      RemoteService.resetPasswordUrl,
+      data: {'email': email},
+    );
+    return response;
   }
   
   @override
@@ -55,12 +66,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async{
                       if (_formKey.currentState!.validate()) {
-                        AlertDialog alert = AlertDialog(
+                        FocusScope.of(context).unfocus();
+                        try {
+                          final responce = await resetPassword(
+                            nameController.text.trim(),
+                          );
+                          String message;
+                          if (responce.statusCode == 200) {
+                            message = "Password reset link sent to your email";
+                          } else {
+                            message = "Failed to send reset link";
+                          }
+
+                          AlertDialog alert = AlertDialog(
                           title: const Text("Reset Password"),
-                          content: const Text(
-                              "Password reset link sent to your email"),
+                          content: Text(
+                            message),
                         );
                         showDialog(
                           context: context,
@@ -69,6 +92,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           },
                         );
                         nameController.clear();
+                        } catch (e) {
+                          AlertDialog alert = AlertDialog(
+                            title: const Text("Reset Password"),
+                            content: const Text(
+                                "Network error occurred"),
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert;
+                            },
+                          );
+                        }
+                        
+                        
                       }
                     },
                     style: ElevatedButton.styleFrom(
