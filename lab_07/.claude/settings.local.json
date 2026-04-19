@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat)",
+      "Bash(go test *)",
+      "Bash(rm debug_test.go)",
+      "Bash(go build *)",
+      "Bash(./lab07_fresh.exe)",
+      "Bash(curl -s -X POST http://localhost:8085/notes -H \"Content-Type: application/json\" -d \"{}\")",
+      "Bash(pkill -f \"lab07_fresh\")",
+      "Bash(rm lab07_fresh.exe)",
+      "Bash(./lab07d.exe)",
+      "Bash(pkill -f \"lab07d\")",
+      "Bash(rm lab07d.exe)",
+      "Bash(netstat -ano)",
+      "Bash(grep 8085 curl -s -X POST http://localhost:8085/notes -H \"Content-Type: application/json\" -d \"{}\" sleep 1 pkill -f \"lab07d\")",
+      "Bash(curl -s -X POST http://localhost:8085/notes -H \"Content-Type: application/json\" -d \"{\\\\\"title\\\\\":\\\\\"test\\\\\"}\")",
+      "Bash(curl -s -X POST http://localhost:8085/notes -H \"Content-Type: application/json\" -d \"{\\\\\"title\\\\\":\\\\\"test\\\\\",\\\\\"content\\\\\":\\\\\"body\\\\\"}\")",
+      "Bash(pkill -f \"lab07\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8085/notes -H \"Content-Type: application/json\" -d \"{}\")",
+      "Bash(go env *)",
+      "Bash(grep -rn \"StructValidator\\\\|Validate\\\\|422\" \"$\\(go env GOPATH\\)/pkg/mod/github.com/gofiber/fiber/v3@v3.1.0/ctx.go\")"
+    ]
+  }
+}
